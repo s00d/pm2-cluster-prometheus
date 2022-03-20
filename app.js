@@ -141,7 +141,6 @@ pmx.initModule({
                 if (request.failed) return
 
                 try {
-                    console.log(request.responses)
                     const registry = AggregatorRegistry.aggregate(request.responses)
                     const promString = await registry.metrics()
                     request.done(null, promString)
