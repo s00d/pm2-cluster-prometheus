@@ -126,7 +126,7 @@ pmx.initModule({
 
     pm2.launchBus((err, bus) => {
 
-        bus.on(GET_METRICS_RES, message => {
+        bus.on(GET_METRICS_RES,  async message => {
             const request = requests.get(message.data.requestId)
             if (!request) return
 
@@ -141,11 +141,13 @@ pmx.initModule({
                 if (request.failed) return
 
                 try {
+                    console.log(request.responses)
                     const registry = AggregatorRegistry.aggregate(request.responses)
-                    const promString = registry.metrics()
+                    const promString = await registry.metrics()
                     request.done(null, promString)
                 } catch (err) {
-                    request.done(new Error('aggregate error prom-client version require >= 11.0.0'))
+                    console.error(err)
+                    request.done(err)
                 }
             }
         })
@@ -160,16 +162,16 @@ pmx.initModule({
         if (conf.register_mode === 'cluster') {
             consul.startRegister(conf)
         } else {
-            consul.deregister(conf)
+            if(consul) consul.deregister(conf)
 
             pm2.list((err, apps) => {
                 if (err) return res.end(err.message)
-    
+
                 const workers = apps.filter(app => {
                     return typeof app.pm2_env.axm_options.isModule === 'undefined'
                         && conf.app_name.indexOf(app.name) !== -1
                 })
-    
+
                 workers.forEach(worker => {
                     consul.startRegister(conf, worker.pm_id)
                 })

@@ -1,9 +1,12 @@
-# pm2-cluster-prometheus
+# pm2-cluster-prometheus-next
 PM2 module to aggregate node.js workers' metrics when use pm2 cluster mode
+
+fixes for last version
+
 ## Install
 
 ```bash
-$ pm2 install pm2-cluster-prometheus
+$ pm2 install pm2-cluster-prometheus-next
 ```
 ## Configuration
 Default settings:
@@ -21,8 +24,8 @@ Default settings:
 ```
 To modify the config values you can use the following commands:
 ```bash
-pm2 set pm2-cluster-prometheus:app_name hello
-pm2 set pm2-cluster-prometheus:port 4000
+pm2 set pm2-cluster-prometheus-next:app_name hello
+pm2 set pm2-cluster-prometheus-next:port 4000
 ```
 ## Mode
 "register_mode": "cluster"
@@ -53,7 +56,7 @@ process.on('message', function (message) {
 ## Uninstall
 
 ```bash
-$ pm2 uninstall pm2-cluster-prometheus
+$ pm2 uninstall pm2-cluster-prometheus-next
 ```
 # License
 

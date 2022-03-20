@@ -1,18 +1,18 @@
 {
-  "name": "pm2-cluster-prometheus",
-  "version": "1.2.2",
+  "name": "pm2-cluster-prometheus-next",
+  "version": "1.3.0",
   "description": "Aggregate node.js workers' metrics when use pm2 cluster mode",
   "main": "app.js",
   "dependencies": {
-    "address": "^1.0.3",
+    "address": "^1.1.2",
     "consul": "^0.30.0",
-    "pm2": "^2.10.2",
-    "pmx": "beta",
-    "prom-client": "11.0.0"
+    "pm2": "^5.2.0",
+    "pmx": "^1.6.7",
+    "prom-client": "14.0.1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/redar9/pm2-cluster-prometheus.git"
+    "url": "https://github.com/s00d/pm2-cluster-prometheus.git"
   },
   "config": {
     "app_name": "api,charge",
