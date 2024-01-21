@@ -78,9 +78,10 @@ io.initModule({
     },
 }, function (err) {
     var _this = this;
+    var _a, _b, _c;
     if (err)
         return console.error(err);
-    var appNames = conf.app_name.split(',').map(function (name) { return name.trim(); });
+    var appNames = ((_a = conf.app_name) !== null && _a !== void 0 ? _a : 'api').split(',').map(function (name) { return name.trim(); });
     var sendWokerRequest = function (id, requestId) {
         pm2_1.default.sendDataToProcessId(id, {
             id: id,
@@ -208,8 +209,9 @@ io.initModule({
     app.use('/online', requestOnlineHandler);
     app.use('/metrics', requestHandler);
     app.get('/', requestIndexHandler);
-    app.listen(conf.port, function () {
-        console.log('app listening on port ' + conf.host + ':' + conf.port + '!');
+    app.listen((_b = conf.port) !== null && _b !== void 0 ? _b : 4000, (_c = conf.host) !== null && _c !== void 0 ? _c : '127.0.0.1', function () {
+        var _a, _b;
+        console.log('app listening on port ' + ((_a = conf.host) !== null && _a !== void 0 ? _a : '127.0.0.1') + ':' + ((_b = conf.port) !== null && _b !== void 0 ? _b : 4000) + '!');
         if (conf.register_mode === 'cluster') {
             consulConnector.startRegister(conf);
         }
@@ -223,7 +225,7 @@ io.initModule({
                 }
                 var workers = apps.filter(function (app) {
                     return typeof app.pm2_env.axm_options.isModule === 'undefined'
-                        && conf.appName.indexOf(app.name) !== -1;
+                        && appNames.indexOf(app.name) !== -1;
                 });
                 workers.forEach(function (worker) {
                     consulConnector.startRegister(conf, worker.pm_id);

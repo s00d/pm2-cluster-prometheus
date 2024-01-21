@@ -13,6 +13,18 @@ let requestCtr = 0
 const requests = new Map<number, IRequest>();
 const consulConnector = new ConsulConnector()
 
+interface Config {
+    auth_token?: string|undefined,
+    app_name?: string,
+    host?: string,
+    port?: number,
+    reigster_disabled?: boolean,
+    consul_host?: string,
+    consul_port?: string,
+    register_mode?: string
+    limit?: number
+}
+
 interface IRequest {
     responses: any[];
     done: (err: Error, result: any) => void;
@@ -23,7 +35,7 @@ interface IRequest {
 
 // fix https://github.com/keymetrics/pm2-io-apm/issues/260
 const io = IO.init()
-const conf = (io.getConfig() as any).module_conf as { [key: string]: any }
+const conf = (io.getConfig() as any).module_conf as Config
 
 io.initModule({
     widget: {
@@ -50,7 +62,7 @@ io.initModule({
 }, function (err: Error) {
     if (err) return console.error(err)
 
-    const appNames = (conf.app_name as string).split(',').map(name => name.trim());
+    const appNames = (conf.app_name ?? 'api').split(',').map(name => name.trim());
     const sendWokerRequest = (id: number, requestId: number) => {
         pm2.sendDataToProcessId(id, {
             id: id,
@@ -181,8 +193,8 @@ io.initModule({
     app.use('/metrics', requestHandler)
     app.get('/', requestIndexHandler);
 
-    app.listen(conf.port, function () {
-        console.log('app listening on port ' + conf.host + ':' + conf.port + '!');
+    app.listen(conf.port ?? 4000, conf.host ?? '127.0.0.1', function () {
+        console.log('app listening on port ' + (conf.host ?? '127.0.0.1') + ':' + (conf.port ?? 4000) + '!');
 
         if (conf.register_mode === 'cluster') {
             consulConnector.startRegister(conf)
@@ -197,7 +209,7 @@ io.initModule({
 
                 const workers = apps.filter(app => {
                     return typeof (app.pm2_env as any).axm_options.isModule === 'undefined'
-                      && conf.appName.indexOf(app.name) !== -1
+                      && appNames.indexOf(app.name) !== -1
                 })
 
                 workers.forEach(worker => {
