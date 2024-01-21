@@ -64,12 +64,15 @@ io.initModule({
         })
     }
 
+    const requestIndexHandler = (req: Request, res: Response) => {
+        res.statusCode = 404
+        return res.end()
+    }
     const requestOnlineHandler = (req: Request, res: Response) => {
         return res.end('ok');
     }
     const requestHandler = (req: Request, res: Response) => {
         const query = req.query;
-
         const requestId = requestCtr++
 
         const done = (err: Error, result: any) => {
@@ -155,7 +158,7 @@ io.initModule({
     });
 
     const app = express()
-
+    app.use(io.expressErrorHandler())
     app.use(
       queryParser({
           parseNull: true,
@@ -164,16 +167,22 @@ io.initModule({
           parseNumber: true
       })
     )
+    app.use((req, res, next) => {
+        const authHeader = req.headers.authorization ?? req.query.token ?? null;
+        const authToken = conf.auth_token ?? '';
+        if(authToken !== '' && conf.auth_token !== authHeader) {
+            res.statusCode = 404
+            return res.end()
+        }
+        next();
+    });
 
-// app.use('/', requestHandler)
     app.use('/online', requestOnlineHandler)
     app.use('/metrics', requestHandler)
-
-// always add the middleware as the last one
-    app.use(io.expressErrorHandler())
+    app.get('/', requestIndexHandler);
 
     app.listen(conf.port, function () {
-        console.log('Example app listening on port ' + conf.port + '!');
+        console.log('app listening on port ' + conf.host + ':' + conf.port + '!');
 
         if (conf.register_mode === 'cluster') {
             consulConnector.startRegister(conf)

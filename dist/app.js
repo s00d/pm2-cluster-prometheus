@@ -94,6 +94,10 @@ io.initModule({
                 console.error('send worker message error', err);
         });
     };
+    var requestIndexHandler = function (req, res) {
+        res.statusCode = 404;
+        return res.end();
+    };
     var requestOnlineHandler = function (req, res) {
         return res.end('ok');
     };
@@ -184,19 +188,28 @@ io.initModule({
         }); });
     });
     var app = (0, express_1.default)();
+    app.use(io.expressErrorHandler());
     app.use((0, express_query_parser_1.queryParser)({
         parseNull: true,
         parseUndefined: true,
         parseBoolean: true,
         parseNumber: true
     }));
-    // app.use('/', requestHandler)
+    app.use(function (req, res, next) {
+        var _a, _b, _c;
+        var authHeader = (_b = (_a = req.headers.authorization) !== null && _a !== void 0 ? _a : req.query.token) !== null && _b !== void 0 ? _b : null;
+        var authToken = (_c = conf.auth_token) !== null && _c !== void 0 ? _c : '';
+        if (authToken !== '' && conf.auth_token !== authHeader) {
+            res.statusCode = 404;
+            return res.end();
+        }
+        next();
+    });
     app.use('/online', requestOnlineHandler);
     app.use('/metrics', requestHandler);
-    // always add the middleware as the last one
-    app.use(io.expressErrorHandler());
+    app.get('/', requestIndexHandler);
     app.listen(conf.port, function () {
-        console.log('Example app listening on port ' + conf.port + '!');
+        console.log('app listening on port ' + conf.host + ':' + conf.port + '!');
         if (conf.register_mode === 'cluster') {
             consulConnector.startRegister(conf);
         }

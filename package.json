@@ -1,6 +1,6 @@
 {
   "name": "pm2-cluster-prometheus-next",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Aggregate node.js workers' metrics when use pm2 cluster mode",
   "main": "./dist/app.js",
   "types": "./dist/app.d.ts",
@@ -23,9 +23,10 @@
     "url": "https://github.com/s00d/pm2-cluster-prometheus.git"
   },
   "config": {
+    "auth_token": "",
     "app_name": "api,charge",
     "host": "127.0.0.1",
-    "port": 3000,
+    "port": 4000,
     "reigster_disabled": false,
     "register_mode": "cluster",
     "limit": 100000

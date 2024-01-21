@@ -13,9 +13,10 @@ Default settings:
 
 ```javascript
   "config": {
+        "auth_token": "",         // request token, disabled if empty string
         "app_name": "api,data",        // Name of the APP(s) to pull monitoring data from, multiple can be specified separated by commas
         "host": '127.0.0.1',           // Default HTTP service host, provides /metrics and /online interfaces
-        "port": 3000,                  // Default HTTP service port, provides /metrics and /online interfaces
+        "port": 4000,                  // Default HTTP service port, provides /metrics and /online interfaces
         "reigster_disabled": false,    // Whether to disable service registration to consul
         "consul_host": "127.0.0.1",
         "consul_port": "8500",
