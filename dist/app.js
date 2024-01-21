@@ -209,9 +209,10 @@ io.initModule({
     app.use('/online', requestOnlineHandler);
     app.use('/metrics', requestHandler);
     app.get('/', requestIndexHandler);
-    app.listen((_b = conf.port) !== null && _b !== void 0 ? _b : 4000, (_c = conf.host) !== null && _c !== void 0 ? _c : '127.0.0.1', function () {
-        var _a, _b;
-        console.log('app listening on port ' + ((_a = conf.host) !== null && _a !== void 0 ? _a : '127.0.0.1') + ':' + ((_b = conf.port) !== null && _b !== void 0 ? _b : 4000) + '!');
+    var port = (_b = conf.port) !== null && _b !== void 0 ? _b : 4000;
+    var host = (_c = conf.host) !== null && _c !== void 0 ? _c : '127.0.0.1';
+    app.listen(port, host, function () {
+        console.log("app listening on port ".concat(host, ":").concat(port, "!"));
         if (conf.register_mode === 'cluster') {
             consulConnector.startRegister(conf);
         }

@@ -193,8 +193,10 @@ io.initModule({
     app.use('/metrics', requestHandler)
     app.get('/', requestIndexHandler);
 
-    app.listen(conf.port ?? 4000, conf.host ?? '127.0.0.1', function () {
-        console.log('app listening on port ' + (conf.host ?? '127.0.0.1') + ':' + (conf.port ?? 4000) + '!');
+    const port = conf.port ?? 4000;
+    const host = conf.host ?? '127.0.0.1';
+    app.listen(port, host, function () {
+        console.log(`app listening on port ${host}:${port}!`);
 
         if (conf.register_mode === 'cluster') {
             consulConnector.startRegister(conf)
