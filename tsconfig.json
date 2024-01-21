@@ -1,0 +1,32 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "sourceMap": false,
+    "noUnusedLocals": true,
+    "baseUrl": "./lib/",
+    "outDir": "./dist/",
+    "declaration": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "target": "es5",
+    "module": "commonjs",
+    "lib": [
+      "es2017",
+      "dom",
+      "dom.iterable"
+    ],
+    "types": [
+      "@types/node",
+      "@types/consul"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
